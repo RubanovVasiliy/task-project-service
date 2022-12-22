@@ -27,9 +27,10 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getById/{id:int}")]
-    public async Task<ActionResult<Project>> GetById(int id)
+    [Route("getById/{id}")]
+    public async Task<ActionResult<Project>> GetById(Guid id)
     {
+
         var projects = await _context.Projects.FindAsync(id);
         if (projects == null)
         {
@@ -41,82 +42,64 @@ public class ProjectsController : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<Project>> Add(CreateProjectDto dto)
     {
-        try
-        {
-            var project = new Project()
-            {
-                Name = dto.Name,
-                StartDate = dto.StartDate,
-                CompleteData = dto.CompleteData,
-                Status = dto.Status,
-                Priority = dto.Priority
-            };
-            await _context.Projects.AddAsync(project);
-            await _context.SaveChangesAsync();
 
-            return Ok(project);
-        }
-        catch
+        var project = new Project()
         {
-            return StatusCode((int)HttpStatusCode.InternalServerError);
-        }
+            Name = dto.Name,
+            StartDate = dto.StartDate,
+            CompleteData = dto.CompleteData,
+            Status = dto.Status,
+            Priority = dto.Priority
+        };
+        await _context.Projects.AddAsync(project);
+        await _context.SaveChangesAsync();
+
+        return Ok(project);
+
     }
 
     [HttpPut]
     [Route("update")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Project>> Update(Project updatedProject)
     {
-        try
-        {
-            var project = await _context.Projects.FindAsync(updatedProject.Id);
-            if (project == null)
-            {
-                return NotFound();
-            }
 
-            project.Name = updatedProject.Name;
-            project.StartDate = updatedProject.StartDate;
-            project.CompleteData = updatedProject.CompleteData;
-            project.Status = updatedProject.Status;
-            project.Priority = updatedProject.Priority;
-            
-            await _context.SaveChangesAsync();
-            
-            return Ok(updatedProject);
-        }
-        catch
+        var project = await _context.Projects.FindAsync(updatedProject.Id);
+        if (project == null)
         {
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return NotFound();
         }
+
+        project.Name = updatedProject.Name;
+        project.StartDate = updatedProject.StartDate;
+        project.CompleteData = updatedProject.CompleteData;
+        project.Status = updatedProject.Status;
+        project.Priority = updatedProject.Priority;
+
+        await _context.SaveChangesAsync();
+
+        return Ok(updatedProject);
+
     }
 
     [HttpDelete]
-    [Route("delete/{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<Project>> Delete(int id)
+    [Route("delete/{id}")]
+    public async Task<ActionResult<Project>> Delete(Guid id)
     {
-        try
-        {
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-            
-            _context.Projects.Remove(project);
-            
-            await _context.SaveChangesAsync();
 
-            return Ok(project);
-        }
-        catch
+        var project = await _context.Projects.FindAsync(id);
+        if (project == null)
         {
-            return StatusCode((int)HttpStatusCode.InternalServerError);
+            return NotFound();
         }
+
+        _context.Projects.Remove(project);
+
+        await _context.SaveChangesAsync();
+
+        return Ok(project);
+
     }
 
 
@@ -124,17 +107,12 @@ public class ProjectsController : ControllerBase
     [Route("getByName/{word}")]
     public async Task<ActionResult<List<Project>>> GetByTitle(string word)
     {
-        try
-        {
-            var project = await _context.Projects
-                .Where(p => p.Name.ToLower().Contains(word.ToLower()))
-                .ToListAsync();
-            
-            return Ok(project);
-        }
-        catch
-        {
-            return StatusCode((int)HttpStatusCode.InternalServerError);
-        }
+
+        var project = await _context.Projects
+            .Where(p => p.Name.ToLower().Contains(word.ToLower()))
+            .ToListAsync();
+
+        return Ok(project);
+
     }
 }
