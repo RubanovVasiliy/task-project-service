@@ -7,7 +7,9 @@ public class Task
 {
     [Key] public Guid Id { get; set; }
     [Required] public string Name { get; set; }
-    [Required] public string Description { get; set; }
-    [Required] public TaskStatus Status { get; set; }
-    [Required] public int Priority { get; set; }
+    public string Description { get; set; }
+    public TaskStatus Status { get; set; }
+    public int Priority { get; set; }
+    public Guid? ProjectId { get; set; }
+    [JsonIgnore] public Project? Project { get; set; }
 }
