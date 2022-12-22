@@ -2,7 +2,7 @@ namespace task_project_service.Models;
 
 public enum ProjectStatus
 {
-    Active,
-    Completed,
-    NotStarted
+    NotStarted = 0,
+    Active = 1,
+    Completed = 2
 }
