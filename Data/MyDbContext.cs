@@ -13,5 +13,22 @@ public sealed class MyDbContext: DbContext
 
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Task> Tasks => Set<Task>();
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<Project>()
+            .Property(e => e.Status)
+            .HasConversion(
+                v => v.ToString(),
+                v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v));
+        
+        modelBuilder
+            .Entity<Task>()
+            .Property(e => e.Status)
+            .HasConversion(
+                v => v.ToString(),
+                v => (Models.TaskStatus)Enum.Parse(typeof(Models.TaskStatus), v));
+    }
 
 }

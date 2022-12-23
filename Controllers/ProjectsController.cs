@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using task_project_service.Data;
+using task_project_service.Dto;
 using task_project_service.Models;
 
 namespace task_project_service.Controllers;
@@ -19,7 +20,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getAll")]
+    [Route()]
     public async Task<ActionResult<List<Project>>> GetAll()
     {
         var projects = await _context.Projects.ToListAsync();
@@ -27,11 +28,12 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("getById/{id}")]
+    [Route("{id}")]
     public async Task<ActionResult<Project>> GetById(Guid id)
     {
-
-        var projects = await _context.Projects.FindAsync(id);
+        var projects = await _context.Projects.Where(p => p.Id == id)
+            .Include(t => t.Tasks)
+            .FirstOrDefaultAsync();
         if (projects == null)
         {
             return NotFound();
@@ -41,9 +43,13 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    [Route("add")]
+    [Route("")]
     public async Task<ActionResult<Project>> Add(CreateProjectDto dto)
     {
+        if (dto.Status > (ProjectStatus)2)
+        {
+            return BadRequest("Invalid status specified");
+        }
 
         var project = new Project()
         {
@@ -57,13 +63,16 @@ public class ProjectsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(project);
-
     }
 
     [HttpPut]
     [Route("update")]
     public async Task<ActionResult<Project>> Update(Project updatedProject)
     {
+        if (updatedProject.Status > (ProjectStatus)2)
+        {
+            return BadRequest("Invalid status specified");
+        }
 
         var project = await _context.Projects.FindAsync(updatedProject.Id);
         if (project == null)
@@ -80,7 +89,6 @@ public class ProjectsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(updatedProject);
-
     }
 
     [HttpDelete]
@@ -99,7 +107,6 @@ public class ProjectsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return Ok(project);
-
     }
 
 
@@ -113,6 +120,5 @@ public class ProjectsController : ControllerBase
             .ToListAsync();
 
         return Ok(project);
-
     }
 }

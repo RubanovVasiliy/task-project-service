@@ -11,5 +11,4 @@ public class Task
     public TaskStatus Status { get; set; }
     public int Priority { get; set; }
     public Guid? ProjectId { get; set; }
-    [JsonIgnore] public Project? Project { get; set; }
 }

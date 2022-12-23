@@ -11,5 +11,5 @@ public class Project
     [Required] public DateTime CompleteData { get; set; }
     [Required] public ProjectStatus Status { get; set; }
     [Required] public int Priority { get; set; }
-    [JsonIgnore] public List<Task>? Tasks { get; set; }
+    [JsonIgnore] public List<Task> Tasks { get; set; } = new();
 }

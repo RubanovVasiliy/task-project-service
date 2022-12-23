@@ -1,4 +1,6 @@
-namespace task_project_service.Models;
+using TaskStatus = task_project_service.Models.TaskStatus;
+
+namespace task_project_service.Dto;
 
 public class CreateTaskDto
 {

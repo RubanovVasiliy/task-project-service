@@ -1,4 +1,6 @@
-namespace task_project_service.Models;
+using task_project_service.Models;
+
+namespace task_project_service.Dto;
 
 public class CreateProjectDto
 {
