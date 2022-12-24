@@ -20,7 +20,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Route()]
+    [Route("getAll")]
     public async Task<ActionResult<List<Project>>> GetAll()
     {
         var projects = await _context.Projects.ToListAsync();
@@ -28,7 +28,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id}")]
+    [Route("getById/{id}")]
     public async Task<ActionResult<Project>> GetById(Guid id)
     {
         var projects = await _context.Projects.Where(p => p.Id == id)
@@ -43,7 +43,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
-    [Route("")]
+    [Route("add")]
     public async Task<ActionResult<Project>> Add(CreateProjectDto dto)
     {
         if (dto.Status > (ProjectStatus)2)
